@@ -17,7 +17,7 @@ package com.github.barteksc.pdfviewer.util;
 
 public interface Constants {
 
-    boolean DEBUG_MODE = true;
+    boolean DEBUG_MODE = false;
 
     /** Size of the minimum, in percent of the component size */
     float MINIMAP_MAX_SIZE = 200f;

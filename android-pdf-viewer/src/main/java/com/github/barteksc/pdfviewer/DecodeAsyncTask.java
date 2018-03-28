@@ -11,6 +11,7 @@ public class DecodeAsyncTask extends AsyncTask<Void, Void, Throwable> {
 
     public interface Callback {
         void onComplete(PdfDocument pdfDocument);
+        void onError(Throwable t);
     }
 
     private boolean cancelled;
@@ -23,6 +24,15 @@ public class DecodeAsyncTask extends AsyncTask<Void, Void, Throwable> {
     private String password;
     private DocumentSource docSource;
     private Callback callback;
+
+    public DecodeAsyncTask(DocumentSource docSource, PDFView pdfView, Callback callback) {
+        this.cancelled = false;
+        this.pdfView = pdfView;
+        this.password = null;
+        this.pdfiumCore = new PdfiumCore(pdfView.getContext());
+        context = pdfView.getContext();
+        this.callback = callback;
+    }
 
     public DecodeAsyncTask(DocumentSource docSource, String password, PDFView pdfView, PdfiumCore pdfiumCore, Callback callback) {
         this.docSource = docSource;
@@ -47,7 +57,7 @@ public class DecodeAsyncTask extends AsyncTask<Void, Void, Throwable> {
     @Override
     protected void onPostExecute(Throwable t) {
         if (t != null) {
-            pdfView.loadError(t);
+            callback.onError(t);
             return;
         }
         if (!cancelled) {
